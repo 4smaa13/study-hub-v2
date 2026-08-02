@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-page: #F7F4EE;
+  --color-card: #FFFEFB;
+  --color-border: #EAE5DA;
+  --color-ink: #1C1917;
+  --color-ink-soft: #78716C;
+  --color-accent: #5B4FE9;
+  --color-accent-hover: #4C3FD9;
+  --color-accent-soft: #EEF0FF;
+  --color-accent-ink: #4338CA;
+}
+
+.dark {
+  --color-page: #0B0B0F;
+  --color-card: #17171D;
+  --color-border: #26262E;
+  --color-ink: #F4F4F5;
+  --color-ink-soft: #A1A1AA;
+  --color-accent: #7C6FF5;
+  --color-accent-hover: #6C5FF0;
+  --color-accent-soft: #201E3A;
+  --color-accent-ink: #C7C1FA;
+}
+
+body {
+  @apply bg-page text-ink;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+:lang(ar) {
+  font-family: 'Cairo', sans-serif;
+}

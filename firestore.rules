@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Rooms: any signed-in user can read/join. Only the creator can delete.
+    // Anyone signed in can create a room (becomes the admin).
+    match /rooms/{roomId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.createdBy == request.auth.uid;
+      allow delete: if request.auth != null
+        && resource.data.createdBy == request.auth.uid;
+      allow update: if request.auth != null;
+
+      // Subcollections (tasks, links, messages) inherit: must be signed in
+      match /{subcollection}/{docId} {
+        allow read, write: if request.auth != null;
+      }
+    }
+  }
+}
