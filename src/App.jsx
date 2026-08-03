@@ -16,12 +16,19 @@ import Chat from './components/Chats/Chat'
 import VideoCall from './components/Video/VideoCall'
 
 function AppShell() {
-  const { user, loading: authLoading, logout } = useAuth()
+  const { user, loading: authLoading, logout, updateUsername } = useAuth()
   const { roomCode } = useRoom()
   const { t, language, toggleLanguage } = useLanguage()
   const { theme, toggleTheme } = useTheme()
   const [authView, setAuthView] = useState('login')
   const [roomView, setRoomView] = useState('join')
+
+  function handleEditUsername() {
+    const newName = window.prompt('Enter a new username:', user?.displayName || '')
+    if (newName?.trim()) {
+      updateUsername(newName)
+    }
+  }
 
   if (authLoading) {
     return (
@@ -51,12 +58,21 @@ function AppShell() {
               {language === 'en' ? 'العربية' : 'English'}
             </button>
             {user && (
-              <button
-                onClick={logout}
-                className="text-sm text-ink-soft hover:text-ink transition"
-              >
-                {t('logOut')}
-              </button>
+              <>
+                <button
+                  onClick={handleEditUsername}
+                  className="text-sm text-ink-soft hover:text-ink transition"
+                  title={t('editUsername')}
+                >
+                  ✏️ {user.displayName || user.email?.split('@')[0]}
+                </button>
+                <button
+                  onClick={logout}
+                  className="text-sm text-ink-soft hover:text-ink transition"
+                >
+                  {t('logOut')}
+                </button>
+              </>
             )}
           </div>
         </div>

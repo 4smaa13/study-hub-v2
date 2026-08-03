@@ -5,6 +5,7 @@ import { useLanguage } from '../../context/LanguageContext'
 export default function Signup({ onSwitchToLogin }) {
   const { signup } = useAuth()
   const { t } = useLanguage()
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -21,7 +22,7 @@ export default function Signup({ onSwitchToLogin }) {
 
     setSubmitting(true)
     try {
-      await signup(email, password)
+      await signup(email, password, username)
     } catch (err) {
       setError(friendlyError(err.code))
     } finally {
@@ -33,6 +34,14 @@ export default function Signup({ onSwitchToLogin }) {
     <div className="w-full max-w-sm mx-auto bg-card rounded-2xl shadow-card border border-border p-6">
       <h2 className="text-xl font-semibold mb-4">{t('signup')}</h2>
       <form onSubmit={handleSubmit} className="space-y-3">
+        <input
+          type="text"
+          placeholder={t('usernamePlaceholder')}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+          className="w-full border border-border bg-page rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+        />
         <input
           type="email"
           placeholder={t('emailPlaceholder')}

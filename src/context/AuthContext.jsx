@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from 'firebase/auth'
 import { auth } from '../lib/firebase'
 
@@ -14,7 +15,6 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // This listener fires whenever auth state changes (login, logout, page refresh)
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser)
       setLoading(false)
@@ -25,17 +25,30 @@ export function AuthProvider({ children }) {
   const login = (email, password) =>
     signInWithEmailAndPassword(auth, email, password)
 
-  const signup = (email, password) =>
-    createUserWithEmailAndPassword(auth, email, password)
+  const signup = async (email, password, displayName) => {
+    const credential = await createUserWithEmailAndPassword(auth, email, password)
+    if (displayName?.trim()) {
+      await updateProfile(credential.user, { displayName: displayName.trim() })
+    }
+    await credential.user.reload()
+    setUser(auth.currentUser)
+    return credential
+  }
 
   const logout = () => signOut(auth)
 
-  const value = { user, loading, login, signup, logout }
+  const updateUsername = async (newName) => {
+    if (!auth.currentUser || !newName?.trim()) return
+    await updateProfile(auth.currentUser, { displayName: newName.trim() })
+    await auth.currentUser.reload()
+    setUser(auth.currentUser)
+  }
+
+  const value = { user, loading, login, signup, logout, updateUsername }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-// Custom hook so components just call useAuth() instead of useContext(AuthContext)
 export function useAuth() {
   const ctx = useContext(AuthContext)
   if (!ctx) throw new Error('useAuth must be used within an AuthProvider')
