@@ -14,9 +14,10 @@ import LinkList from './components/Links/LinkList'
 import Schedule from './components/Schedule/Schedule'
 import Chat from './components/Chats/Chat'
 import VideoCall from './components/Video/VideoCall'
+import MembersList from './components/Members/MembersList'
 
 function AppShell() {
-  const { user, loading: authLoading, logout, updateUsername } = useAuth()
+  const { user, loading: authLoading, logout, updateUsername, deleteAccount } = useAuth()
   const { roomCode } = useRoom()
   const { t, language, toggleLanguage } = useLanguage()
   const { theme, toggleTheme } = useTheme()
@@ -24,9 +25,25 @@ function AppShell() {
   const [roomView, setRoomView] = useState('join')
 
   function handleEditUsername() {
-    const newName = window.prompt('Enter a new username:', user?.displayName || '')
+    const newName = window.prompt(t('enterNewUsername'), user?.displayName || '')
     if (newName?.trim()) {
       updateUsername(newName)
+    }
+  }
+
+  async function handleDeleteAccount() {
+    const confirmed = window.confirm(t('confirmDeleteAccount'))
+    if (!confirmed) return
+    const password = window.prompt(t('enterPasswordConfirm'))
+    if (!password) return
+    try {
+      await deleteAccount(password)
+    } catch (err) {
+      if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+        window.alert(t('incorrectPasswordAccountNotDeleted'))
+      } else {
+        window.alert(t('somethingWentWrongTryAgain'))
+      }
     }
   }
 
@@ -72,6 +89,12 @@ function AppShell() {
                 >
                   {t('logOut')}
                 </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  className="text-sm text-red-500 hover:underline"
+                >
+                  {t('deleteAccount')}
+                </button>
               </>
             )}
           </div>
@@ -106,6 +129,7 @@ function AppShell() {
               <LinkList />
               <Chat />
               <VideoCall />
+              <MembersList />
             </div>
           </>
         )}

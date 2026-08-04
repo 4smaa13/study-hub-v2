@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useRef } from 'react'
 import {
   doc,
   getDoc,
@@ -6,12 +6,18 @@ import {
   updateDoc,
   deleteDoc,
   arrayUnion,
+  arrayRemove,
   serverTimestamp,
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from './AuthContext'
 
 const RoomContext = createContext(null)
+const STORAGE_PREFIX = 'studyhub_last_room_'
+
+function storageKeyFor(uid) {
+  return `${STORAGE_PREFIX}${uid}`
+}
 
 export function RoomProvider({ children }) {
   const { user } = useAuth()
@@ -19,16 +25,35 @@ export function RoomProvider({ children }) {
   const [roomData, setRoomData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const attemptedAutoRejoin = useRef(false)
+  const autoRejoinForUid = useRef(null)
 
-  // Reset room when user logs out
   useEffect(() => {
     if (!user) {
       setRoomCode(null)
       setRoomData(null)
+      attemptedAutoRejoin.current = false
+      autoRejoinForUid.current = null
     }
   }, [user])
 
-  async function joinRoom(code) {
+  useEffect(() => {
+    if (!user || roomCode) return
+    // Only attempt auto-rejoin once per signed-in user, not once globally —
+    // otherwise switching accounts in the same browser can silently pull in
+    // a room saved by whichever account used this browser last.
+    if (attemptedAutoRejoin.current && autoRejoinForUid.current === user.uid) return
+
+    attemptedAutoRejoin.current = true
+    autoRejoinForUid.current = user.uid
+
+    const savedCode = localStorage.getItem(storageKeyFor(user.uid))
+    if (savedCode) {
+      joinRoom(savedCode, { silent: true })
+    }
+  }, [user, roomCode])
+
+  async function joinRoom(code, options = {}) {
     setError('')
     setLoading(true)
     try {
@@ -36,11 +61,14 @@ export function RoomProvider({ children }) {
       const ref = doc(db, 'rooms', roomId)
       const snap = await getDoc(ref)
       if (!snap.exists()) {
-        setError('No room found with that code.')
+        if (options.silent) {
+          localStorage.removeItem(storageKeyFor(user.uid))
+        } else {
+          setError('No room found with that code.')
+        }
         return false
       }
 
-      // Record membership so Firestore rules can verify access
       await updateDoc(ref, { members: arrayUnion(user.uid) })
 
       const data = snap.data()
@@ -50,10 +78,13 @@ export function RoomProvider({ children }) {
 
       setRoomCode(snap.id)
       setRoomData({ ...data, members })
+      localStorage.setItem(storageKeyFor(user.uid), snap.id)
       return true
     } catch (err) {
       console.error('Join room error:', err)
-      setError('Could not join room. Please try again.')
+      if (!options.silent) {
+        setError('Could not join room. Please try again.')
+      }
       return false
     } finally {
       setLoading(false)
@@ -81,6 +112,7 @@ export function RoomProvider({ children }) {
       await setDoc(ref, newRoom)
       setRoomCode(roomId)
       setRoomData(newRoom)
+      localStorage.setItem(storageKeyFor(user.uid), roomId)
       return true
     } catch (err) {
       console.error('Create room error:', err)
@@ -100,11 +132,22 @@ export function RoomProvider({ children }) {
       setError('Could not delete room. Please try again.')
       return
     }
+    localStorage.removeItem(storageKeyFor(user.uid))
     setRoomCode(null)
     setRoomData(null)
   }
 
-  function leaveRoom() {
+  async function leaveRoom() {
+    if (roomCode && user) {
+      try {
+        await updateDoc(doc(db, 'rooms', roomCode), {
+          members: arrayRemove(user.uid),
+        })
+      } catch (err) {
+        console.error('Leave room error:', err)
+      }
+    }
+    if (user) localStorage.removeItem(storageKeyFor(user.uid))
     setRoomCode(null)
     setRoomData(null)
   }
