@@ -8,6 +8,9 @@ import {
   arrayUnion,
   arrayRemove,
   serverTimestamp,
+  collection,
+  getDocs,
+  writeBatch,
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from './AuthContext'
@@ -39,9 +42,6 @@ export function RoomProvider({ children }) {
 
   useEffect(() => {
     if (!user || roomCode) return
-    // Only attempt auto-rejoin once per signed-in user, not once globally —
-    // otherwise switching accounts in the same browser can silently pull in
-    // a room saved by whichever account used this browser last.
     if (attemptedAutoRejoin.current && autoRejoinForUid.current === user.uid) return
 
     attemptedAutoRejoin.current = true
@@ -126,13 +126,26 @@ export function RoomProvider({ children }) {
   async function deleteRoom() {
     if (!roomCode) return
     try {
+      const subcollections = ['tasks', 'links', 'messages', 'members', 'meta']
+
+      // Client-side cleanup of orphaned subcollections prior to room deletion
+      for (const sub of subcollections) {
+        const subRef = collection(db, 'rooms', roomCode, sub)
+        const snap = await getDocs(subRef)
+        if (!snap.empty) {
+          const batch = writeBatch(db)
+          snap.docs.forEach((d) => batch.delete(d.ref))
+          await batch.commit()
+        }
+      }
+
       await deleteDoc(doc(db, 'rooms', roomCode))
     } catch (err) {
       console.error('Delete room error:', err)
       setError('Could not delete room. Please try again.')
       return
     }
-    localStorage.removeItem(storageKeyFor(user.uid))
+    if (user) localStorage.removeItem(storageKeyFor(user.uid))
     setRoomCode(null)
     setRoomData(null)
   }

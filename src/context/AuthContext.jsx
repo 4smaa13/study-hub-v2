@@ -10,6 +10,7 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
   deleteUser,
+  sendPasswordResetEmail,
 } from 'firebase/auth'
 import {
   doc,
@@ -20,6 +21,7 @@ import {
   query,
   where,
   getDocs,
+  writeBatch,
 } from 'firebase/firestore'
 import { auth, db } from '../lib/firebase'
 
@@ -42,6 +44,24 @@ async function syncUserProfile(firebaseUser) {
   } catch (err) {
     console.error('Profile sync error:', err)
   }
+}
+
+// Helper to clean up all subcollections inside a room document before deleting the room
+async function deleteRoomWithSubcollections(roomId) {
+  const roomRef = doc(db, 'rooms', roomId)
+  const subcollections = ['tasks', 'links', 'messages', 'members', 'meta']
+
+  for (const sub of subcollections) {
+    const subRef = collection(db, 'rooms', roomId, sub)
+    const snap = await getDocs(subRef)
+    if (!snap.empty) {
+      const batch = writeBatch(db)
+      snap.docs.forEach((d) => batch.delete(d.ref))
+      await batch.commit()
+    }
+  }
+
+  await deleteDoc(roomRef)
 }
 
 export function AuthProvider({ children }) {
@@ -77,6 +97,10 @@ export function AuthProvider({ children }) {
     return credential
   }
 
+  const resetPassword = (email) => {
+    return sendPasswordResetEmail(auth, email)
+  }
+
   const logout = () => signOut(auth)
 
   const updateUsername = async (newName) => {
@@ -90,20 +114,21 @@ export function AuthProvider({ children }) {
   const deleteAccount = async (password) => {
     if (!auth.currentUser) return
     const uid = auth.currentUser.uid
-    const credential = EmailAuthProvider.credential(auth.currentUser.email, password)
-    await reauthenticateWithCredential(auth.currentUser, credential)
 
-    // If this person created any rooms, delete those too — an admin-less
-    // room with no way to manage it left behind isn't useful to anyone.
+    // Re-authenticate if user logged in via password
+    if (password) {
+      const credential = EmailAuthProvider.credential(auth.currentUser.email, password)
+      await reauthenticateWithCredential(auth.currentUser, credential)
+    }
+
+    // Deep-delete rooms created by this user along with their subcollections
     try {
       const roomsRef = collection(db, 'rooms')
       const q = query(roomsRef, where('createdBy', '==', uid))
       const snap = await getDocs(q)
-      await Promise.all(snap.docs.map((roomDoc) => deleteDoc(roomDoc.ref)))
+      await Promise.all(snap.docs.map((roomDoc) => deleteRoomWithSubcollections(roomDoc.id)))
     } catch (err) {
       console.error('Owned rooms cleanup error:', err)
-      // Don't block account deletion if this step fails — the account
-      // deletion itself is the priority the person asked for.
     }
 
     try {
@@ -121,6 +146,7 @@ export function AuthProvider({ children }) {
     login,
     signup,
     loginWithGoogle,
+    resetPassword,
     logout,
     updateUsername,
     deleteAccount,
