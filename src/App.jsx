@@ -17,7 +17,6 @@ import MembersList from './components/Members/MembersList'
 import Whiteboard from './components/Whiteboard/Whiteboard'
 import AISummarizer from './components/Ai/AiSummarizer'
 import StudyAnalytics from './components/Analytics/StudyAnalytics'
-import SpotifyPlayer from './components/Audio/SpotifyPlayer'
 
 // Crisp SVG Vector Icons
 const Icons = {
@@ -106,13 +105,13 @@ const Icons = {
 function Modal({ isOpen, onClose, title, children }) {
   if (!isOpen) return null
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-      <div className="bg-card border border-border rounded-xl shadow-2xl w-full max-w-sm p-4 relative animate-in fade-in zoom-in-95 duration-150 text-ink">
-        <div className="flex justify-between items-center mb-2.5 border-b border-border pb-2">
-          <h3 className="text-sm font-bold">{title}</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2A1F16]/50 p-4 backdrop-blur-sm">
+      <div className="bg-card border border-border rounded-3xl shadow-card w-full max-w-sm p-5 relative animate-in fade-in zoom-in-95 duration-150 text-ink">
+        <div className="flex justify-between items-center mb-3 border-b border-border pb-3">
+          <h3 className="font-serif font-medium text-lg">{title}</h3>
           <button 
             onClick={onClose}
-            className="text-ink-soft hover:text-ink p-1 rounded-md hover:bg-page transition"
+            className="text-ink-soft hover:text-ink p-1.5 rounded-full hover:bg-almond transition"
           >
             <Icons.Close />
           </button>
@@ -233,18 +232,27 @@ function AppShell() {
   return (
     <div className="min-h-screen text-ink bg-page text-xs">
       {/* Top Header */}
-      <header className="border-b border-border bg-card sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
+            <header className="border-b border-border bg-card sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between">
           
-          <h1 className="font-bold text-base tracking-tight">{t('appName')}</h1>
+          <div className="flex items-center gap-2.5">
+            <span className="w-7 h-7 rounded-[9px] bg-accent flex items-center justify-center shrink-0">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                <path d="M4 4L20 4L20 20L4 20L4 4Z" stroke="white" strokeWidth="2" strokeLinejoin="round" />
+                <path d="M8 9H16" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                <path d="M8 13H14" stroke="white" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </span>
+            <h1 className="font-serif font-semibold text-lg tracking-tight text-ink">{t('appName')}</h1>
+          </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
 
             {user && roomCode && (
               <>
                 <button
                   onClick={leaveRoom}
-                  className="p-1.5 border border-border rounded-lg hover:bg-page transition text-ink-soft hover:text-ink"
+                  className="p-2 rounded-full hover:bg-almond transition text-ink-soft hover:text-ink"
                   title={language === 'ar' ? 'مغادرة الغرفة' : 'Leave Room'}
                 >
                   <Icons.Back />
@@ -252,7 +260,7 @@ function AppShell() {
 
                 <button
                   onClick={() => setIsVideoOpen(true)}
-                  className="p-1.5 border border-border rounded-lg hover:bg-page transition text-ink-soft hover:text-ink"
+                  className="p-2 rounded-full hover:bg-almond transition text-ink-soft hover:text-ink"
                   title={language === 'ar' ? 'مكالمة فيديو' : 'Video Call'}
                 >
                   <Icons.Camera />
@@ -260,7 +268,7 @@ function AppShell() {
 
                 <button
                   onClick={() => setIsRoomInfoOpen(true)}
-                  className="p-1.5 border border-border rounded-lg hover:bg-page transition text-ink-soft hover:text-ink"
+                  className="p-2 rounded-full hover:bg-almond transition text-ink-soft hover:text-ink"
                   title={language === 'ar' ? 'معلومات الغرفة' : 'Room Info'}
                 >
                   <Icons.Info />
@@ -270,7 +278,7 @@ function AppShell() {
 
             <button
               onClick={toggleTheme}
-              className="p-1.5 border border-border rounded-lg hover:bg-page transition text-ink-soft hover:text-ink"
+              className="p-2 rounded-full hover:bg-almond transition text-ink-soft hover:text-ink"
               aria-label="Toggle dark mode"
             >
               {theme === 'light' ? <Icons.Moon /> : <Icons.Sun />}
@@ -278,7 +286,7 @@ function AppShell() {
 
             <button
               onClick={toggleLanguage}
-              className="px-2.5 py-1 border border-border rounded-lg hover:bg-page transition text-[11px] font-medium"
+              className="px-3 py-1.5 rounded-full hover:bg-almond transition text-[11px] font-semibold text-ink-soft hover:text-ink"
             >
               {language === 'en' ? 'العربية' : 'English'}
             </button>
@@ -287,29 +295,29 @@ function AppShell() {
               <div className="relative" ref={profileRef}>
                 <button
                   onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                  className="p-1.5 border border-border rounded-lg hover:bg-page transition text-ink-soft hover:text-ink"
+                  className="p-2 rounded-full hover:bg-almond transition text-ink-soft hover:text-ink"
                   title="Profile"
                 >
                   <Icons.User />
                 </button>
 
                 {isProfileMenuOpen && (
-                  <div className={`absolute top-full mt-1.5 w-44 bg-card border border-border rounded-xl shadow-xl py-1 z-50 ${language === 'ar' ? 'left-0' : 'right-0'}`}>
-                    <div className="px-3 py-1 border-b border-border">
+                  <div className={`absolute top-full mt-2 w-48 bg-card border border-border rounded-2xl shadow-card py-1.5 z-50 ${language === 'ar' ? 'left-0' : 'right-0'}`}>
+                    <div className="px-3.5 py-2 border-b border-border">
                       <p className="text-[10px] text-ink-soft">{language === 'ar' ? 'المستخدم' : 'Signed in as'}</p>
                       <p className="text-xs font-bold truncate">{user.displayName || user.email?.split('@')[0]}</p>
                     </div>
 
                     <button
                       onClick={openEditModal}
-                      className="w-full text-start px-3 py-1.5 text-xs hover:bg-page transition flex items-center gap-2"
+                      className="w-full text-start px-3.5 py-2 text-xs hover:bg-almond transition flex items-center gap-2"
                     >
                       <Icons.Edit /> {t('editUsername')}
                     </button>
 
                     <button
                       onClick={logout}
-                      className="w-full text-start px-3 py-1.5 text-xs hover:bg-page transition flex items-center gap-2"
+                      className="w-full text-start px-3.5 py-2 text-xs hover:bg-almond transition flex items-center gap-2"
                     >
                       <Icons.LogOut /> {t('logOut')}
                     </button>
@@ -317,7 +325,7 @@ function AppShell() {
                     <div className="border-t border-border mt-1 pt-1">
                       <button
                         onClick={openDeleteModal}
-                        className="w-full text-start px-3 py-1.5 text-xs text-red-500 hover:bg-red-500/10 transition flex items-center gap-2"
+                        className="w-full text-start px-3.5 py-2 text-xs text-red-500 hover:bg-red-500/10 transition flex items-center gap-2"
                       >
                         <Icons.Trash /> {t('deleteAccount')}
                       </button>
@@ -334,11 +342,8 @@ function AppShell() {
       {/* Main Container */}
       <main className="max-w-7xl mx-auto px-4 py-4">
         {!user ? (
-          <div className="max-w-md mx-auto py-8">
-            <h2 className="text-lg font-bold text-center mb-5">
-              {t('welcome')}
-            </h2>
-            {authView === 'login' ? (
+          <div className="py-8">
+           {authView === 'login' ? (
               <Login onSwitchToSignup={() => setAuthView('signup')} />
             ) : (
               <Signup onSwitchToLogin={() => setAuthView('login')} />
@@ -353,17 +358,14 @@ function AppShell() {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
 
-            {/* Column 1: Pomodoro, Schedule & Spotify Sidebar (3 Cols) */}
+            {/* Column 1: Pomodoro & Schedule Sidebar (3 Cols) */}
             <div className="lg:col-span-3 space-y-3 flex flex-col items-start w-full">
-              <div className="w-56 h-56 bg-card border border-border rounded-2xl p-3 shadow-xs flex flex-col items-center justify-center text-center overflow-hidden mx-auto lg:mx-0 [&_*]:text-xs [&_h2]:text-xs [&_h3]:text-xs [&_.text-4xl]:text-2xl [&_.text-5xl]:text-2xl [&_.text-6xl]:text-2xl [&_button]:py-1 [&_button]:px-2 [&_button]:text-[11px]">
-                <PomodoroTimer />
-              </div>
+                            <PomodoroTimer />
               
               <div className="w-full space-y-3">
                 <Schedule />
-                <SpotifyPlayer />
               </div>
             </div>
 
@@ -372,8 +374,8 @@ function AppShell() {
               <div className="flex items-center gap-2 flex-wrap">
                 <button
                   onClick={() => setIsTasksDropdownOpen(!isTasksDropdownOpen)}
-                  className={`px-3 py-1.5 rounded-lg border border-border text-xs font-medium transition flex items-center gap-2 ${
-                    isTasksDropdownOpen ? 'bg-primary text-white border-primary' : 'bg-card hover:bg-page text-ink-soft hover:text-ink'
+                  className={`px-3.5 py-2 rounded-full border text-xs font-semibold transition flex items-center gap-2 ${
+                    isTasksDropdownOpen ? 'bg-accent text-white border-accent' : 'bg-card border-border hover:bg-almond text-ink-soft hover:text-ink'
                   }`}
                 >
                   <Icons.CheckList />
@@ -383,8 +385,8 @@ function AppShell() {
 
                 <button
                   onClick={() => setIsLinksDropdownOpen(!isLinksDropdownOpen)}
-                  className={`px-3 py-1.5 rounded-lg border border-border text-xs font-medium transition flex items-center gap-2 ${
-                    isLinksDropdownOpen ? 'bg-primary text-white border-primary' : 'bg-card hover:bg-page text-ink-soft hover:text-ink'
+                  className={`px-3.5 py-2 rounded-full border text-xs font-semibold transition flex items-center gap-2 ${
+                    isLinksDropdownOpen ? 'bg-accent text-white border-accent' : 'bg-card border-border hover:bg-almond text-ink-soft hover:text-ink'
                   }`}
                 >
                   <Icons.Link />
@@ -394,8 +396,8 @@ function AppShell() {
 
                 <button
                   onClick={() => setIsAiDropdownOpen(!isAiDropdownOpen)}
-                  className={`px-3 py-1.5 rounded-lg border border-border text-xs font-medium transition flex items-center gap-2 ${
-                    isAiDropdownOpen ? 'bg-primary text-white border-primary' : 'bg-card hover:bg-page text-ink-soft hover:text-ink'
+                  className={`px-3.5 py-2 rounded-full border text-xs font-semibold transition flex items-center gap-2 ${
+                    isAiDropdownOpen ? 'bg-accent text-white border-accent' : 'bg-card border-border hover:bg-almond text-ink-soft hover:text-ink'
                   }`}
                 >
                   <Icons.Sparkles />
@@ -405,8 +407,8 @@ function AppShell() {
 
                 <button
                   onClick={() => setIsAnalyticsDropdownOpen(!isAnalyticsDropdownOpen)}
-                  className={`px-3 py-1.5 rounded-lg border border-border text-xs font-medium transition flex items-center gap-2 ${
-                    isAnalyticsDropdownOpen ? 'bg-primary text-white border-primary' : 'bg-card hover:bg-page text-ink-soft hover:text-ink'
+                  className={`px-3.5 py-2 rounded-full border text-xs font-semibold transition flex items-center gap-2 ${
+                    isAnalyticsDropdownOpen ? 'bg-accent text-white border-accent' : 'bg-card border-border hover:bg-almond text-ink-soft hover:text-ink'
                   }`}
                 >
                   <Icons.Chart />
@@ -416,25 +418,25 @@ function AppShell() {
               </div>
 
               {isTasksDropdownOpen && (
-                <div className="bg-card border border-border rounded-xl p-2.5 shadow-xs max-h-52 overflow-y-auto animate-in slide-in-from-top-1 duration-150 [&_*]:text-xs [&_button]:py-1 [&_button]:px-2 [&_input]:py-1 [&_input]:px-2 [&_input]:text-xs">
+                <div className="bg-card border border-border rounded-2xl p-3 shadow-card max-h-52 overflow-y-auto animate-in slide-in-from-top-1 duration-150 [&_*]:text-xs [&_button]:py-1 [&_button]:px-2 [&_input]:py-1 [&_input]:px-2 [&_input]:text-xs">
                   <TaskBoard />
                 </div>
               )}
 
               {isLinksDropdownOpen && (
-                <div className="bg-card border border-border rounded-xl p-2.5 shadow-xs max-h-52 overflow-y-auto animate-in slide-in-from-top-1 duration-150 [&_*]:text-xs [&_button]:py-1 [&_button]:px-2 [&_input]:py-1 [&_input]:px-2 [&_input]:text-xs">
+                <div className="bg-card border border-border rounded-2xl p-3 shadow-card max-h-52 overflow-y-auto animate-in slide-in-from-top-1 duration-150 [&_*]:text-xs [&_button]:py-1 [&_button]:px-2 [&_input]:py-1 [&_input]:px-2 [&_input]:text-xs">
                   <LinkList />
                 </div>
               )}
 
               {isAiDropdownOpen && (
-                <div className="bg-card border border-border rounded-xl p-2.5 shadow-xs max-h-64 overflow-y-auto animate-in slide-in-from-top-1 duration-150 [&_*]:text-xs [&_button]:py-1 [&_button]:px-2 [&_input]:py-1 [&_input]:px-2 [&_input]:text-xs border-primary/30">
+                <div className="bg-card border border-border rounded-2xl p-3 shadow-card max-h-64 overflow-y-auto animate-in slide-in-from-top-1 duration-150 [&_*]:text-xs [&_button]:py-1 [&_button]:px-2 [&_input]:py-1 [&_input]:px-2 [&_input]:text-xs border-accent/30">
                   <AISummarizer />
                 </div>
               )}
 
               {isAnalyticsDropdownOpen && (
-                <div className="bg-card border border-border rounded-xl p-2.5 shadow-xs max-h-80 overflow-y-auto animate-in slide-in-from-top-1 duration-150 [&_*]:text-xs [&_button]:py-1 [&_button]:px-2 [&_input]:py-1 [&_input]:px-2 [&_input]:text-xs border-primary/30">
+                <div className="bg-card border border-border rounded-2xl p-3 shadow-card max-h-80 overflow-y-auto animate-in slide-in-from-top-1 duration-150 [&_*]:text-xs [&_button]:py-1 [&_button]:px-2 [&_input]:py-1 [&_input]:px-2 [&_input]:text-xs border-accent/30">
                   <StudyAnalytics />
                 </div>
               )}
@@ -460,16 +462,16 @@ function AppShell() {
         <VideoCall />
       </Modal>
 
-      {/* Room Info Modal */}
+           {/* Room Info Modal */}
       <Modal
         isOpen={isRoomInfoOpen}
         onClose={() => setIsRoomInfoOpen(false)}
         title={language === 'ar' ? 'معلومات الغرفة' : 'Room Info'}
       >
         <div className="space-y-3">
-          <div className="p-2.5 bg-page rounded-lg border border-border">
+          <div className="p-3 bg-almond rounded-2xl">
             <p className="text-[10px] text-ink-soft">{language === 'ar' ? 'رمز الغرفة' : 'Room Code'}</p>
-            <p className="text-sm font-mono font-bold text-primary">{roomCode}</p>
+            <p className="text-sm font-mono font-bold text-accent-ink">{roomCode}</p>
           </div>
           
           <MembersList />
@@ -477,7 +479,7 @@ function AppShell() {
           <div className="pt-2 border-t border-border flex flex-col gap-2">
             <button
               onClick={leaveRoom}
-              className="w-full py-1.5 px-3 rounded-lg border border-border hover:bg-page transition text-xs font-medium flex items-center justify-center gap-2"
+              className="w-full py-2 px-3 rounded-2xl border-[1.5px] border-almond hover:bg-almond transition text-xs font-semibold flex items-center justify-center gap-2"
             >
               <Icons.Back />
               <span>{language === 'ar' ? 'مغادرة الغرفة' : 'Leave Room'}</span>
@@ -487,7 +489,7 @@ function AppShell() {
             {isHost && (
               <button
                 onClick={() => setIsDeleteRoomModalOpen(true)}
-                className="w-full py-1.5 px-3 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/20 transition text-xs font-medium flex items-center justify-center gap-2"
+                className="w-full py-2 px-3 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition text-xs font-semibold flex items-center justify-center gap-2"
               >
                 <Icons.Trash />
                 <span>{language === 'ar' ? 'حذف الغرفة' : 'Delete Room'}</span>
@@ -509,18 +511,18 @@ function AppShell() {
               ? 'هل أنت تأكد من أنك تريد حذف هذه الغرفة؟ سيتم إغلاقها لجميع الأعضاء.' 
               : 'Are you sure you want to delete this room? It will be closed for all members.'}
           </p>
-          <div className="flex justify-end gap-1.5">
+          <div className="flex justify-end gap-2">
             <button
               type="button"
               onClick={() => setIsDeleteRoomModalOpen(false)}
-              className="px-2.5 py-1 text-xs rounded-lg border border-border hover:bg-page transition"
+              className="px-3.5 py-1.5 text-xs font-semibold rounded-full border-[1.5px] border-almond hover:bg-almond transition"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={handleConfirmDeleteRoom}
-              className="px-2.5 py-1 text-xs rounded-lg bg-red-500 text-white hover:bg-red-600 transition"
+              className="px-3.5 py-1.5 text-xs font-bold rounded-full bg-red-500 text-white hover:bg-red-600 transition"
             >
               Delete
             </button>
@@ -533,26 +535,26 @@ function AppShell() {
         onClose={() => setIsEditModalOpen(false)}
         title={t('editUsername')}
       >
-        <form onSubmit={handleSaveUsername} className="space-y-2.5">
+        <form onSubmit={handleSaveUsername} className="space-y-3">
           <input
             type="text"
             value={newUsernameInput}
             onChange={(e) => setNewUsernameInput(e.target.value)}
-            className="w-full px-2.5 py-1 text-xs border border-border rounded-lg bg-page text-ink focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full px-3.5 py-2.5 text-sm border-[1.5px] border-almond rounded-2xl bg-card text-ink focus:outline-none focus:border-accent transition"
             placeholder={t('enterNewUsername')}
             autoFocus
           />
-          <div className="flex justify-end gap-1.5">
+          <div className="flex justify-end gap-2">
             <button
               type="button"
               onClick={() => setIsEditModalOpen(false)}
-              className="px-2.5 py-1 text-xs rounded-lg border border-border hover:bg-page transition"
+              className="px-3.5 py-1.5 text-xs font-semibold rounded-full border-[1.5px] border-almond hover:bg-almond transition"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-2.5 py-1 text-xs rounded-lg bg-primary text-white hover:opacity-90 transition"
+              className="px-3.5 py-1.5 text-xs font-bold rounded-full bg-accent text-white hover:bg-accent-hover transition"
             >
               Save
             </button>
@@ -565,13 +567,13 @@ function AppShell() {
         onClose={() => setIsDeleteModalOpen(false)}
         title={t('deleteAccount')}
       >
-        <form onSubmit={handleConfirmDeleteAccount} className="space-y-2.5">
+        <form onSubmit={handleConfirmDeleteAccount} className="space-y-3">
           <p className="text-xs text-ink-soft">{t('confirmDeleteAccount')}</p>
           <input
             type="password"
             value={deletePasswordInput}
             onChange={(e) => setDeletePasswordInput(e.target.value)}
-            className="w-full px-2.5 py-1 text-xs border border-border rounded-lg bg-page text-ink focus:outline-none focus:ring-1 focus:ring-red-500"
+            className="w-full px-3.5 py-2.5 text-sm border-[1.5px] border-almond rounded-2xl bg-card text-ink focus:outline-none focus:border-red-400 transition"
             placeholder={t('enterPasswordConfirm')}
             required
             autoFocus
@@ -579,18 +581,18 @@ function AppShell() {
           {deleteError && (
             <p className="text-[10px] text-red-500">{deleteError}</p>
           )}
-          <div className="flex justify-end gap-1.5">
+          <div className="flex justify-end gap-2">
             <button
               type="button"
               onClick={() => setIsDeleteModalOpen(false)}
-              className="px-2.5 py-1 text-xs rounded-lg border border-border hover:bg-page transition"
+              className="px-3.5 py-1.5 text-xs font-semibold rounded-full border-[1.5px] border-almond hover:bg-almond transition"
               disabled={isDeleting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-2.5 py-1 text-xs rounded-lg bg-red-500 text-white hover:bg-red-600 transition disabled:opacity-50"
+              className="px-3.5 py-1.5 text-xs font-bold rounded-full bg-red-500 text-white hover:bg-red-600 transition disabled:opacity-50"
               disabled={isDeleting}
             >
               {isDeleting ? 'Deleting...' : t('deleteAccount')}
@@ -598,7 +600,7 @@ function AppShell() {
           </div>
         </form>
       </Modal>
-
+      
     </div>
   )
 }

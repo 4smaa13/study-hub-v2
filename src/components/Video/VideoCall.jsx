@@ -81,21 +81,31 @@ export default function VideoCall() {
 
   if (!roomCode) {
     return (
-      <div className="bg-card rounded-2xl shadow-card border border-border p-6">
-        <h2 className="text-lg font-semibold mb-2">{t('videoTitle')}</h2>
+      <div className="bg-card rounded-3xl shadow-card border border-border p-6">
+        <div className="flex items-center gap-2.5 mb-2">
+          <div className="w-8 h-8 rounded-xl bg-accent-soft flex items-center justify-center shrink-0 text-accent-ink">
+            <CameraIcon />
+          </div>
+          <h2 className="font-serif font-medium text-xl text-ink">{t('videoTitle')}</h2>
+        </div>
         <p className="text-ink-soft text-sm">{t('joinRoomForVideo')}</p>
       </div>
     )
   }
 
   return (
-    <div className="bg-card rounded-2xl shadow-card border border-border p-6">
+    <div className="bg-card rounded-3xl shadow-card border border-border p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">{t('videoTitle')}</h2>
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-accent-soft flex items-center justify-center shrink-0 text-accent-ink">
+            <CameraIcon />
+          </div>
+          <h2 className="font-serif font-medium text-xl text-ink">{t('videoTitle')}</h2>
+        </div>
         {hasJoined && (
           <button
             onClick={handleLeave}
-            className="text-xs text-red-500 hover:underline whitespace-nowrap"
+            className="text-xs text-red-500 hover:underline whitespace-nowrap font-semibold"
           >
             {t('leaveCall')}
           </button>
@@ -103,14 +113,14 @@ export default function VideoCall() {
       </div>
 
       {!hasJoined && (
-        <div className="flex flex-col items-center justify-center h-[300px] border border-dashed border-border rounded-xl">
+        <div className="flex flex-col items-center justify-center h-[300px] bg-almond/60 border border-dashed border-almond rounded-2xl">
           <p className="text-ink-soft text-sm mb-4">
             {t('joinCallHint')}
           </p>
           <button
             onClick={handleJoin}
             disabled={loading}
-            className="bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-medium rounded-lg px-6 py-2 transition"
+            className="bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-bold text-sm rounded-2xl px-6 py-2.5 transition"
           >
             {loading ? t('connecting') : t('joinCall')}
           </button>
@@ -119,9 +129,18 @@ export default function VideoCall() {
 
       <div
         ref={containerRef}
-        className="rounded-xl overflow-hidden border border-border"
+        className="rounded-2xl overflow-hidden border border-border"
         style={{ height: hasJoined ? '500px' : '0px', width: '100%' }}
       />
     </div>
+  )
+}
+
+function CameraIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <rect x="2" y="6" width="14" height="12" rx="2.5" stroke="currentColor" strokeWidth="1.8"/>
+      <path d="M16 10.5L22 7v10l-6-3.5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
+    </svg>
   )
 }

@@ -94,23 +94,31 @@ export default function LinkList() {
   }
 
   return (
-    <div className="bg-card rounded-2xl shadow-card border border-border p-6">
-      <h2 className="text-lg font-semibold mb-4">🔗 {t('linksTitle')}</h2>
+    <div className="bg-card rounded-3xl shadow-card border border-border p-6">
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className="w-8 h-8 rounded-xl bg-accent-soft flex items-center justify-center shrink-0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L11.5 4.5" stroke="var(--color-accent-ink)" strokeWidth="1.8" strokeLinecap="round"/>
+            <path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07L12.5 19.5" stroke="var(--color-accent-ink)" strokeWidth="1.8" strokeLinecap="round"/>
+          </svg>
+        </div>
+        <h2 className="font-serif font-medium text-xl text-ink">{t('linksTitle')}</h2>
+      </div>
 
-      <form onSubmit={handleAddLink} className="space-y-2 mb-4">
+      <form onSubmit={handleAddLink} className="space-y-2.5 mb-4">
         <input
           type="text"
           placeholder={t('linkTitlePlaceholder')}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full border border-border bg-page rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+          className="w-full border-[1.5px] border-almond bg-card rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition"
         />
         <input
           type="text"
           placeholder={t('linkUrlPlaceholder')}
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          className="w-full border border-border bg-page rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+          className="w-full border-[1.5px] border-almond bg-card rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition"
         />
 
         <input
@@ -125,24 +133,24 @@ export default function LinkList() {
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
-          className="w-full border border-border text-ink-soft hover:text-ink hover:bg-page disabled:opacity-50 rounded-lg py-2 text-sm transition"
+          className="w-full border-[1.5px] border-almond text-ink-soft hover:text-ink hover:bg-almond disabled:opacity-50 rounded-2xl py-2.5 text-sm font-semibold transition"
         >
-          {uploading ? '...' : '📄 or upload a PDF instead'}
+          {uploading ? '...' : 'or upload a PDF instead'}
         </button>
 
-        <label className="flex items-center gap-2 text-sm text-ink-soft">
+        <label className="flex items-center gap-2 text-sm text-ink-soft px-1">
           <input
             type="checkbox"
             checked={isPdf}
             onChange={(e) => setIsPdf(e.target.checked)}
-            className="w-4 h-4 accent-accent"
+            className="w-4 h-4 accent-sage rounded"
           />
           {t('isPdfLabel')}
         </label>
         {error && <p className="text-sm text-red-500">{error}</p>}
         <button
           type="submit"
-          className="w-full bg-accent hover:bg-accent-hover text-white font-medium rounded-lg py-2 transition"
+          className="w-full bg-accent hover:bg-accent-hover text-white font-bold text-sm rounded-2xl py-2.5 transition"
         >
           {t('addLink')}
         </button>
@@ -160,17 +168,16 @@ export default function LinkList() {
             return (
               <li
                 key={link.id}
-                className="flex items-center justify-between border border-border rounded-lg px-3 py-2 hover:bg-page transition"
+                className="flex items-center justify-between bg-almond rounded-2xl px-4 py-3 transition"
               >
-
-                <a
+          <a
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-accent hover:underline flex-1 truncate"
+                  className="flex items-center gap-2.5 text-accent-ink hover:underline flex-1 truncate"
                 >
-                  <span>{link.isPdf ? '📄' : '🔖'}</span>
-                  <span className="truncate">{link.title}</span>
+                  <span className="text-sm">{link.isPdf ? '📄' : '🔖'}</span>
+                  <span className="truncate text-sm font-medium">{link.title}</span>
                 </a>
                 <button
                   onClick={() => deleteLink(link.id)}

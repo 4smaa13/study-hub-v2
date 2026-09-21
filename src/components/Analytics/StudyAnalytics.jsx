@@ -34,10 +34,8 @@ export default function StudyAnalytics() {
   const [totalSessions, setTotalSessions] = useState(0)
 
   useEffect(() => {
-    // Read real study session logs from localStorage
     const logs = JSON.parse(localStorage.getItem('study_hub_sessions') || '[]')
     
-    // Calculate total sessions and hours
     const completedSessions = logs.length
     const accumulatedMinutes = logs.reduce((sum, item) => sum + (item.durationMinutes || 0), 0)
     const hoursCount = (accumulatedMinutes / 60).toFixed(1)
@@ -45,12 +43,10 @@ export default function StudyAnalytics() {
     setTotalSessions(completedSessions)
     setTotalHours(hoursCount)
 
-    // Calculate weekly bar chart mapping for Monday - Sunday
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     const today = new Date()
     
     const chartMap = days.map((dayLabel, index) => {
-      // Map 0-6 index to Monday-Sunday dates
       const currentDayOfWeek = today.getDay() === 0 ? 6 : today.getDay() - 1
       const targetDate = new Date()
       targetDate.setDate(today.getDate() - (currentDayOfWeek - index))
@@ -68,7 +64,6 @@ export default function StudyAnalytics() {
 
     setWeeklyData(chartMap)
 
-    // Calculate consecutive day streak count
     let streak = 0
     let checkDate = new Date()
     while (true) {
@@ -78,7 +73,6 @@ export default function StudyAnalytics() {
         streak++
         checkDate.setDate(checkDate.getDate() - 1)
       } else {
-        // Allow streak to remain active if user hasn't completed today's session yet
         if (streak === 0 && checkDate.toDateString() === new Date().toDateString()) {
           checkDate.setDate(checkDate.getDate() - 1)
           continue
@@ -129,83 +123,85 @@ export default function StudyAnalytics() {
   ]
 
   return (
-    <div className="bg-card border border-border rounded-2xl p-3 shadow-xs space-y-3">
+    <div className="bg-card border border-border rounded-3xl p-5 shadow-card space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-border pb-2.5">
-        <h3 className="font-bold text-xs flex items-center gap-1.5">
-          <Icons.Award />
-          <span>{t.title}</span>
-        </h3>
+      <div className="flex items-center justify-between flex-wrap gap-2 border-b border-border pb-3">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-accent-soft flex items-center justify-center shrink-0 text-accent-ink">
+            <Icons.Award />
+          </div>
+          <h3 className="font-serif font-medium text-lg text-ink">{t.title}</h3>
+        </div>
 
         {/* Gamified Streak Pill */}
-        <div className="flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-full text-amber-600 dark:text-amber-400 font-bold text-[11px]">
+        <div className="flex items-center gap-1.5 bg-honey/15 px-3 py-1 rounded-full text-[#8a5a1c] font-bold text-[11px]">
           <Icons.Flame />
           <span>{streakDays} {t.streak}</span>
         </div>
       </div>
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-2 gap-2 text-xs">
-        <div className="bg-page border border-border rounded-xl p-2 flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-primary/10 text-primary">
+      <div className="grid grid-cols-2 gap-2.5 text-xs">
+        <div className="bg-almond rounded-2xl p-3 flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-accent-soft text-accent-ink">
             <Icons.Clock />
           </div>
           <div>
             <p className="text-[10px] text-ink-soft">{t.totalFocus}</p>
-            <p className="font-bold text-xs">{totalHours} hrs</p>
+            <p className="font-bold text-sm text-ink">{totalHours} hrs</p>
           </div>
         </div>
 
-        <div className="bg-page border border-border rounded-xl p-2 flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-green-500/10 text-green-500">
+        <div className="bg-almond rounded-2xl p-3 flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-sage-soft text-sage">
             <Icons.CheckCircle />
           </div>
           <div>
             <p className="text-[10px] text-ink-soft">{t.sessionsCompleted}</p>
-            <p className="font-bold text-xs">{totalSessions} sessions</p>
+            <p className="font-bold text-sm text-ink">{totalSessions} sessions</p>
           </div>
         </div>
       </div>
 
       {/* Chart Section */}
-      <div className="bg-page border border-border rounded-xl p-2.5 space-y-1.5">
+      <div className="bg-almond rounded-2xl p-3.5 space-y-2">
         <p className="text-[11px] font-semibold text-ink-soft">{t.chartTitle}</p>
         <div className="w-full h-32 text-[10px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={weeklyData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorHours" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4}/>
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#BF6E52" stopOpacity={0.45}/>
+                  <stop offset="95%" stopColor="#BF6E52" stopOpacity={0}/>
                 </linearGradient>
               </defs>
               <XAxis dataKey="day" stroke="currentColor" className="text-ink-soft opacity-60" tickLine={false} />
               <YAxis stroke="currentColor" className="text-ink-soft opacity-60" tickLine={false} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'var(--card, #ffffff)',
-                  borderColor: 'var(--border, #e2e8f0)',
-                  borderRadius: '8px',
+                  backgroundColor: 'var(--color-card)',
+                  borderColor: 'var(--color-border)',
+                  borderRadius: '12px',
                   fontSize: '11px',
                 }}
               />
-              <Area type="monotone" dataKey="hours" stroke="#3b82f6" strokeWidth={2} fillOpacity={1} fill="url(#colorHours)" />
+              <Area type="monotone" dataKey="hours" stroke="#BF6E52" strokeWidth={2} fillOpacity={1} fill="url(#colorHours)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Badges Grid */}
-      <div className="space-y-1.5">
+      <div className="space-y-2">
         <p className="text-[11px] font-semibold text-ink-soft">{t.badgesTitle}</p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {BADGES.map((badge, idx) => (
             <div
               key={idx}
-              className={`p-2 rounded-xl border text-[11px] space-y-0.5 transition ${
+              className={`p-2.5 rounded-2xl text-[11px] space-y-0.5 transition ${
                 badge.unlocked
-                  ? 'bg-card border-primary/30 text-ink shadow-2xs'
-                  : 'bg-page border-border text-ink-soft opacity-50 grayscale'
+                  ? 'bg-accent-soft text-accent-ink'
+                  : 'bg-almond text-ink-soft opacity-50 grayscale'
               }`}
             >
               <div className="flex items-center gap-1 font-bold">

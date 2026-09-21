@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import { useLanguage } from '../../context/LanguageContext'
+import AuthLayout from './AuthLayout'
 
 export default function Signup({ onSwitchToLogin }) {
   const { signup, loginWithGoogle } = useAuth()
@@ -46,66 +47,80 @@ export default function Signup({ onSwitchToLogin }) {
   }
 
   return (
-    <div className="w-full max-w-sm mx-auto bg-card rounded-2xl shadow-card border border-border p-6">
-      <h2 className="text-xl font-semibold mb-4">{t('signup')}</h2>
-
+    <AuthLayout
+      activeTab="signup"
+      onSwitchToLogin={onSwitchToLogin}
+      onSwitchToSignup={() => {}}
+      eyebrow="Join Study Hub"
+      title="Create your account."
+    >
       <button
         type="button"
         onClick={handleGoogle}
         disabled={googleSubmitting}
-        className="w-full flex items-center justify-center gap-2 border border-border bg-page hover:bg-border/40 disabled:opacity-50 text-ink font-medium rounded-lg py-2 transition mb-3"
+        className="w-full flex items-center justify-center gap-2 border border-border bg-card hover:bg-almond disabled:opacity-50 text-ink font-semibold text-sm rounded-2xl py-3 transition mb-5"
       >
         <GoogleIcon />
         {googleSubmitting ? '...' : 'Continue with Google'}
       </button>
 
-      <div className="flex items-center gap-3 mb-3">
+      <div className="flex items-center gap-3 mb-5 text-ink-soft text-xs">
         <div className="flex-1 h-px bg-border" />
-        <span className="text-xs text-ink-soft">or</span>
+        or
         <div className="flex-1 h-px bg-border" />
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <input
-          type="text"
-          placeholder={t('usernamePlaceholder')}
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-          className="w-full border border-border bg-page rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
-        />
-        <input
-          type="email"
-          placeholder={t('emailPlaceholder')}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="w-full border border-border bg-page rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
-        />
-        <input
-          type="password"
-          placeholder={t('passwordMinPlaceholder')}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="w-full border border-border bg-page rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
-        />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-xs font-semibold text-ink-soft mb-1.5">{t('usernamePlaceholder')}</label>
+          <input
+            type="text"
+            placeholder="e.g. asmaa_k"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            className="w-full border-[1.5px] border-almond bg-card rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-accent transition"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-ink-soft mb-1.5">{t('emailPlaceholder')}</label>
+          <input
+            type="email"
+            placeholder="you@university.edu"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full border-[1.5px] border-almond bg-card rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-accent transition"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-ink-soft mb-1.5">{t('passwordMinPlaceholder')}</label>
+          <input
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full border-[1.5px] border-almond bg-card rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-accent transition"
+          />
+        </div>
         {error && <p className="text-sm text-red-500">{error}</p>}
         <button
           type="submit"
           disabled={submitting}
-          className="w-full bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-medium rounded-lg py-2 transition"
+          className="w-full bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-bold text-sm rounded-2xl py-3.5 transition"
         >
           {submitting ? t('creatingAccount') : t('signup')}
         </button>
       </form>
-      <p className="text-sm text-ink-soft mt-4 text-center">
+
+      <p className="text-sm text-ink-soft mt-6 text-center">
         {t('haveAccount')}{' '}
-        <button onClick={onSwitchToLogin} className="text-accent hover:underline">
+        <button onClick={onSwitchToLogin} className="text-accent-ink font-semibold hover:underline">
           {t('login')}
         </button>
       </p>
-    </div>
+    </AuthLayout>
   )
 }
 

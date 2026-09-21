@@ -92,10 +92,10 @@ export default function Chat() {
   }
 
   return (
-    <div className="bg-card rounded-2xl shadow-card border border-border p-6 flex flex-col h-[500px]">
-      <h2 className="text-lg font-semibold mb-4">{t('chatTitle')}</h2>
+    <div className="bg-card rounded-3xl shadow-card border border-border p-6 flex flex-col h-[500px]">
+      <h2 className="font-serif font-medium text-xl text-ink mb-4">{t('chatTitle')}</h2>
 
-      <div className="flex-1 overflow-y-auto space-y-2 mb-4 pr-1">
+      <div className="flex-1 overflow-y-auto space-y-2.5 mb-4 pr-1">
         {loading && (
           <p className="text-ink-soft text-sm text-center py-6">
             {t('loadingMessages')}
@@ -122,10 +122,10 @@ export default function Chat() {
                 className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`group max-w-[75%] rounded-lg px-3 py-2 ${
+                  className={`group max-w-[75%] px-3.5 py-2.5 ${
                     isMe
-                      ? 'bg-accent text-white'
-                      : 'bg-page text-ink border border-border'
+                      ? 'bg-accent text-white rounded-2xl rounded-br-md'
+                      : 'bg-almond text-ink rounded-2xl rounded-bl-md'
                   }`}
                 >
                   {!isMe && (
@@ -161,12 +161,12 @@ export default function Chat() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           disabled={sending}
-          className="flex-1 border border-border bg-page rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50"
+          className="flex-1 border-[1.5px] border-almond bg-card rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent disabled:opacity-50 transition"
         />
         <button
           type="submit"
           disabled={sending || !text.trim()}
-          className="bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-medium rounded-lg px-4 py-2 transition"
+          className="bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-bold text-sm rounded-2xl px-5 py-2.5 transition"
         >
           {sending ? '...' : t('send')}
         </button>

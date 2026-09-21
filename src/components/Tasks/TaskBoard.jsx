@@ -56,8 +56,16 @@ export default function TaskBoard() {
   }
 
   return (
-    <div className="bg-card rounded-2xl shadow-card border border-border p-6">
-      <h2 className="text-lg font-semibold mb-4">📋 {t('taskBoardTitle')}</h2>
+    <div className="bg-card rounded-3xl shadow-card border border-border p-6">
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className="w-8 h-8 rounded-xl bg-accent-soft flex items-center justify-center shrink-0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="4" width="16" height="16" rx="4" stroke="var(--color-accent-ink)" strokeWidth="1.8"/>
+            <path d="M8.5 12.5L11 15L16 9.5" stroke="var(--color-accent-ink)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+        <h2 className="font-serif font-medium text-xl text-ink">{t('taskBoardTitle')}</h2>
+      </div>
 
       <form onSubmit={handleAddTask} className="flex gap-2 mb-4">
         <input
@@ -65,11 +73,11 @@ export default function TaskBoard() {
           placeholder={t('addTaskPlaceholder')}
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
-          className="flex-1 border border-border bg-page rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+          className="flex-1 border-[1.5px] border-almond bg-card rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent transition"
         />
         <button
           type="submit"
-          className="bg-accent hover:bg-accent-hover text-white font-medium rounded-lg px-4 py-2 transition"
+          className="bg-accent hover:bg-accent-hover text-white font-bold text-sm rounded-2xl px-5 py-2.5 transition"
         >
           {t('addTask')}
         </button>
@@ -87,14 +95,16 @@ export default function TaskBoard() {
             return (
               <li
                 key={task.id}
-                className="flex items-center justify-between border border-border rounded-lg px-3 py-2 hover:bg-page transition"
+                className={`flex items-center justify-between rounded-2xl px-4 py-3 transition ${
+                  task.done ? 'bg-sage-soft' : 'bg-almond'
+                }`}
               >
                 <label className="flex items-center gap-3 cursor-pointer flex-1">
                   <input
                     type="checkbox"
                     checked={task.done}
                     onChange={() => toggleTask(task)}
-                    className="w-4 h-4 accent-accent"
+                    className="w-4 h-4 accent-sage rounded"
                   />
                   <span
                     className={

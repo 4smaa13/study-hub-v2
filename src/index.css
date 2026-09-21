@@ -3,27 +3,35 @@
 @tailwind utilities;
 
 :root {
-  --color-page: #F7F4EE;
-  --color-card: #FFFEFB;
-  --color-border: #EAE5DA;
-  --color-ink: #1C1917;
-  --color-ink-soft: #78716C;
-  --color-accent: #5B4FE9;
-  --color-accent-hover: #4C3FD9;
-  --color-accent-soft: #EEF0FF;
-  --color-accent-ink: #4338CA;
+  --color-page: #FAF3E6;
+  --color-card: #FFFCF6;
+  --color-almond: #EDE0C8;
+  --color-border: #E8DCC3;
+  --color-ink: #4A3728;
+  --color-ink-soft: #7A6A5A;
+  --color-accent: #BF6E52;
+  --color-accent-hover: #9A5540;
+  --color-accent-soft: #F5E4DC;
+  --color-accent-ink: #7A4530;
+  --color-sage: #7C8F5E;
+  --color-sage-soft: #E9EEE0;
+  --color-honey: #E8A94C;
 }
 
 .dark {
-  --color-page: #0B0B0F;
-  --color-card: #17171D;
-  --color-border: #26262E;
-  --color-ink: #F4F4F5;
-  --color-ink-soft: #A1A1AA;
-  --color-accent: #7C6FF5;
-  --color-accent-hover: #6C5FF0;
-  --color-accent-soft: #201E3A;
-  --color-accent-ink: #C7C1FA;
+  --color-page: #221812;
+  --color-card: #2E2119;
+  --color-almond: #3A2C21;
+  --color-border: #3D2C22;
+  --color-ink: #F5EAD9;
+  --color-ink-soft: #C2AD95;
+  --color-accent: #E08A67;
+  --color-accent-hover: #D97B55;
+  --color-accent-soft: #3A2620;
+  --color-accent-ink: #F0B79A;
+  --color-sage: #96A878;
+  --color-sage-soft: #2C3324;
+  --color-honey: #F0BE72;
 }
 
 body {

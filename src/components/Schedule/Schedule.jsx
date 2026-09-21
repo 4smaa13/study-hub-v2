@@ -135,10 +135,12 @@ export default function Schedule() {
   }
 
   return (
-    <div className="bg-card rounded-2xl shadow-card border border-border p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="text-ink"><Icons.Calendar /></span>
-        <h2 className="text-lg font-semibold text-ink">{t('scheduleTitle')}</h2>
+    <div className="bg-card rounded-3xl shadow-card border border-border p-6">
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className="w-8 h-8 rounded-xl bg-accent-soft flex items-center justify-center shrink-0 text-accent-ink">
+          <Icons.Calendar />
+        </div>
+        <h2 className="font-serif font-medium text-xl text-ink">{t('scheduleTitle')}</h2>
       </div>
 
       {isAdmin && (
@@ -155,7 +157,7 @@ export default function Schedule() {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="w-full bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-medium rounded-lg py-2 transition flex items-center justify-center gap-2"
+            className="w-full bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-bold text-sm rounded-2xl py-2.5 transition flex items-center justify-center gap-2"
           >
             <Icons.Upload />
             <span>{uploading ? t('connecting') : `${t('upload')} (Admin Only)`}</span>
@@ -180,9 +182,9 @@ export default function Schedule() {
             src={scheduleUrl}
             alt="Official Class Schedule"
             onClick={() => setEnlarged(true)}
-            className="w-full rounded-lg border border-border cursor-zoom-in"
+            className="w-full rounded-2xl border border-border cursor-zoom-in"
           />
-          <div className="flex items-center justify-between mt-2">
+          <div className="flex items-center justify-between mt-3">
             <p className="text-xs text-ink-soft flex items-center gap-1">
               <Icons.Clock />
               <span>{t('lastUpdated')}: {updatedAt ? updatedAt.toLocaleString() : '--'}</span>
@@ -202,7 +204,7 @@ export default function Schedule() {
       )}
 
       {!loading && !loadError && !scheduleUrl && (
-        <div className="flex flex-col items-center justify-center py-6 text-ink-soft text-sm gap-2">
+        <div className="flex flex-col items-center justify-center py-8 text-ink-soft text-sm gap-2 rounded-2xl bg-almond/60 border border-dashed border-almond">
           <Icons.FileText />
           <p>{t('noSchedule')}</p>
         </div>
@@ -216,7 +218,7 @@ export default function Schedule() {
           <img
             src={scheduleUrl}
             alt="Enlarged Class Schedule"
-            className="max-w-full max-h-full rounded-lg"
+            className="max-w-full max-h-full rounded-2xl"
           />
         </div>
       )}
