@@ -21,7 +21,7 @@ A real-time collaborative study platform for students. Create a "room" with clas
 - **Light/dark mode**
 
 ## Evolution: v1 to v2
-This is the second version of the project. The first was a simple vanilla JavaScript site ([live demo](https://study-with-me13.netlify.app/), [code](https://github.com/4smaa13/study-with-me-v1)). I rebuilt it in React with Firebase to learn how to build a real multi-user app: accounts, shared rooms, real-time data and serverless deployment.
+This is the second version of the project. The first, built in July 2026, was a simple vanilla JavaScript site ([live demo](https://study-with-me13.netlify.app/), [code](https://github.com/4smaa13/study-with-me-v1)). I rebuilt it in React with Firebase between August and September 2026 to learn how to build a real multi-user app: accounts, shared rooms, real-time data and serverless deployment.
 
 ## Known issues
 Some room features work for one user but do not sync correctly for every member of the room. I am still debugging how room data is read and shared across users.
